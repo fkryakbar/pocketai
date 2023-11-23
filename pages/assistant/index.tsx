@@ -7,11 +7,12 @@ import { Textarea } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { Toast } from "@/utils/Swal";
 import { ChatComponent } from "@/components/Chat";
-
+import Cookies from 'js-cookie';
 
 export default function Chat() {
     const auth = useAuth();
     const router = useRouter()
+
     if (auth.isLoading == false && auth.userData == null) {
         router.push('/login')
         return false
@@ -46,12 +47,15 @@ function Chats() {
         }])
         setSentences('')
         setIsLoading(true)
-        const response = await fetch('/api/assistant', {
+        const formData = new FormData();
+        formData.set('sentences', sentences)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/assistant`, {
             method: 'POST',
-            body: JSON.stringify({
-                sentences: sentences,
-                uid: auth.userData.uid
-            })
+            body: formData,
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${Cookies.get('token_session')}`
+            }
         })
         if (response.status === 200) {
             const responseData = await response.json();

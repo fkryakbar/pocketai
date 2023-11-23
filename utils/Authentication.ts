@@ -1,17 +1,27 @@
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import FirebaseApp from "./Firebase";
 import { Toast } from "./Swal";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import Firestore from "./Firestore";
-import FirebaseAdmin from "./FirebaseAdmin";
+import Cookies from 'js-cookie';
+import { NextRouter, useRouter } from "next/router";
+import useSWR, { mutate } from "swr";
 
 
-const auth = getAuth(FirebaseApp);
+const fetcher = async (url: string) => {
+    const res = await fetch(url, {
+        headers: {
+            "Accept": "application/json",
+            "Authorization": `Bearer ${Cookies.get('token_session')}`
+        }
+    })
 
+    if (!res.ok) {
+        const error: any = new Error('An error occurred while fetching the data.')
 
+        error.info = await res.json()
+        error.status = res.status
+        throw error
+    }
 
-
+    return res.json()
+}
 const sigInUser = async (email: string, password: string) => {
     if (email == '' || password == '') {
         Toast.fire({
@@ -20,89 +30,70 @@ const sigInUser = async (email: string, password: string) => {
         })
         return false
     }
-
-    await signInWithEmailAndPassword(auth, email, password).then(async () => {
-        await setDoc(doc(Firestore, 'access_token', auth.currentUser?.uid as string), {
-            valid_to: Date.now() + 300
-        })
-        Toast.fire({
-            icon: 'success',
-            title: 'Successfully signed in'
-        })
-    }).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        if (errorCode == 'auth/invalid-login-credentials') {
-            Toast.fire({
-                icon: 'error',
-                title: 'Invalid email or password'
-            })
-        }
-        if (errorCode == 'auth/invalid-email') {
-            Toast.fire({
-                icon: 'error',
-                title: 'Invalid email address'
-            })
-        }
-        return false
+    const formData = new FormData();
+    formData.set('email', email);
+    formData.set('password', password);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+        },
+        body: formData
     });
+
+    if (response.status == 200) {
+        const responseData = await response.json();
+        Cookies.set('token_session', responseData.token)
+        mutate(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/user`)
+    } else {
+        const error = await response.json();
+        Toast.fire({
+            icon: 'error',
+            title: error.message
+        })
+    }
+
 }
 
 const useUser = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [userData, setUserData] = useState<any>(null);
 
-    useEffect(() => {
-        setIsLoading(true)
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                let initUserData: any = {}
-                const userRef = doc(Firestore, 'users', user.uid);
-                const docSnap = await getDoc(userRef);
-                initUserData = docSnap.data();
+    const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/user`, fetcher, {
+        revalidateIfStale: true,
+        revalidateOnFocus: true,
+        revalidateOnReconnect: false,
+        revalidateOnMount: true
+    });
+    let userData = null;
 
-                updateToken(user.uid)
+    if (isLoading == false && error == undefined) {
+        userData = data.user_session
+    }
 
-                initUserData.uid = user.uid
-                setUserData(initUserData)
-                setIsLoading(false)
 
-            } else {
-                setIsLoading(false)
+    return { userData, isLoading, error }
+}
 
-            }
-
-        })
-    }, [])
-    useEffect(() => {
-        const inverval = setInterval(() => {
-            updateToken(userData.uid)
-        }, 290000)
-
-        return () => {
-            clearInterval(inverval)
+const signOutUser = async (router: NextRouter) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+        method: 'POST',
+        headers: {
+            "Accept": "application/json",
+            "Authorization": `Bearer ${Cookies.get('token_session')}`
         }
-    }, [userData])
+    });
 
-
-    return { userData, isLoading }
-}
-function updateToken(uid: string) {
-    const accessTokenRef = doc(Firestore, 'access_token', uid);
-    updateDoc(accessTokenRef, {
-        valid_to: Date.now() + 300000,
-    })
-}
-const signOutUser = async () => {
-    await signOut(auth).then(() => {
+    if (response.status == 200) {
+        Cookies.remove('token_session');
         window.location.href = '/login'
-    }).catch((err) => {
-        console.log(err)
-    })
+    } else {
+        Toast.fire({
+            icon: 'error',
+            title: 'Something went wrong'
+        })
+    }
 
 }
 
 
 
-export { auth, useUser, sigInUser, signOutUser }
+export { useUser, sigInUser, signOutUser }

@@ -5,7 +5,7 @@ import { sigInUser } from "@/utils/Authentication";
 import { Button, Input, Spinner } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Login() {
     const [email, setEmail] = useState('');

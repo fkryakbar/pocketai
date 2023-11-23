@@ -6,9 +6,9 @@ const AuthContext = createContext<any | undefined>(undefined);
 
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const { userData, isLoading } = useUser();
+    const { userData, isLoading, error } = useUser();
     return (
-        <AuthContext.Provider value={{ userData, isLoading }}>
+        <AuthContext.Provider value={{ userData, isLoading, error }}>
             {children}
         </AuthContext.Provider>
     )

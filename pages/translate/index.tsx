@@ -9,6 +9,8 @@ import { Toast } from "@/utils/Swal";
 import Markdown from "@/components/Markdown";
 import { Select, SelectItem } from "@nextui-org/react";
 import { ChatComponent } from "@/components/Chat";
+import Cookies from 'js-cookie';
+
 
 export default function Chat() {
     const auth = useAuth();
@@ -48,13 +50,16 @@ function Chats() {
         }])
         setSentences('')
         setIsLoading(true)
-        const response = await fetch('/api/translate', {
+        const formData = new FormData();
+        formData.set('sentences', sentences)
+        formData.set('language', language)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/translate`, {
             method: 'POST',
-            body: JSON.stringify({
-                sentences: sentences,
-                uid: auth.userData.uid,
-                toLanguage: language
-            })
+            body: formData,
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${Cookies.get('token_session')}`
+            }
         })
         if (response.status === 200) {
             const responseData = await response.json();
