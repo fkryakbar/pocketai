@@ -118,7 +118,7 @@ function Chats() {
                 </>) : null
             }
         </div>
-        <div className="w-full flex gap-3 items-center mb-5">
+        <div className="w-full flex gap-3 items-center">
             <Textarea
                 minRows={2}
                 placeholder="Enter your sentences..."

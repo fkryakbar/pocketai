@@ -12,6 +12,7 @@ export default function Layout({ children, title }: { children: ReactNode, title
     return <>
         <Head>
             <title>{title}</title>
+            <meta name="description" content='Intelligence That Fits in Your Pocket' />
         </Head>
         <Navbar className="lg:hidden" onMenuOpenChange={setIsMenuOpen}>
             <NavbarContent>
@@ -29,7 +30,7 @@ export default function Layout({ children, title }: { children: ReactNode, title
                 <SidebarMenu />
             </NavbarMenu>
         </Navbar>
-        <div className="lg:flex gap-5 lg:w-[70%] w-[100%] lg:mx-auto lg:mt-20 p-5">
+        <div className="lg:flex gap-5 lg:w-[70%] w-[100%] lg:mx-auto lg:mt-20 px-5">
             <div className="lg:basis-[20%] lg:block hidden">
                 <SidebarMenu />
             </div>

@@ -7,7 +7,7 @@ export default function Layout({ children, title }: { children: ReactNode, title
         <>
             <Head>
                 <title>{title}</title>
-                <meta name="description" content='' />
+                <meta name="description" content='Intelligence That Fits in Your Pocket' />
             </Head>
             <Gradient />
             {children}
