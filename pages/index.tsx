@@ -15,7 +15,7 @@ export default function Home() {
             <h1 className="text-blue-500 font-bold text-6xl text-center">
               Pocket AI
             </h1>
-            <h4 className="mt-1 text-lg font-semibold text-slate-600 text-center">
+            <h4 className="mt-1 text-lg font-semibold text-slate-600 text-center dark:text-white">
               Intelligence That Fits in Your Pocket.
             </h4>
             <div className="mt-3 flex gap-3 items-center">
@@ -26,7 +26,7 @@ export default function Home() {
                   Get Started
                 </Link>
               </Button>
-              <Button className="font-bold bg-white text-slate-600 border-[1px]" size="lg" radius="sm" onClick={e => {
+              <Button className="font-bold bg-transparent dark:text-white text-slate-600 border-[1px] dark:border-slate-600" size="lg" radius="sm" onClick={e => {
                 router.push('/about')
               }}>
                 <Link href={'/about'}>

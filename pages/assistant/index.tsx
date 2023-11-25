@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Toast } from "@/utils/Swal";
 import { ChatComponent } from "@/components/Chat";
 import Cookies from 'js-cookie';
+import ChatLoading from "@/components/ChatLoading";
 
 export default function Chat() {
     const auth = useAuth();
@@ -38,7 +39,6 @@ function Chats() {
     const [sentences, setSentences] = useState('');
     const [chats, setChats] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const auth = useAuth()
 
     async function onCorrect() {
         setChats(prev => [...prev, {
@@ -92,25 +92,13 @@ function Chats() {
             })}
             {
                 isLoading ? (<>
-                    <div className="mb-3 hover:bg-slate-100 py-3 px-1 rounded">
-                        <div className={`mb-1 flex items-center gap-2 text-blue-500`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <p className="capitalize font-semibold lg:text-lg text-base">
-                                assistant
-                            </p>
-                        </div>
-                        <div className="ml-[32px] animate-pulse h-5 rounded bg-slate-200 mb-2"></div>
-                        <div className="ml-[32px] animate-pulse h-5 rounded bg-slate-200 w-[50%] mb-2"></div>
-                        <div className="ml-[32px] animate-pulse h-5 rounded bg-slate-200 w-[20%] mb-2"></div>
-                    </div>
+                    <ChatLoading />
                 </>) : null
             }
             {
                 chats.length == 0 ? (<>
                     <div className="h-[300px] flex justify-center items-center">
-                        <div className="flex flex-col items-center text-slate-700">
+                        <div className="flex flex-col items-center text-slate-700 dark:text-slate-300">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-20 h-20">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
                             </svg>

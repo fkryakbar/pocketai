@@ -1,4 +1,5 @@
 import Home from "@/components/Layouts/Home";
+import ThemeToggler from "@/components/ThemeToggler";
 import Link from "next/link";
 
 export default function About() {
@@ -12,6 +13,7 @@ export default function About() {
                                 Pocket AI
                             </h1>
                         </Link>
+                        <ThemeToggler />
                     </div>
                     <div className="mt-5">
                         <h1 className="font-bold text-xl">

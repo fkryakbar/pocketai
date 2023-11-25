@@ -1,7 +1,8 @@
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
 import Markdown from "./Markdown";
-
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
 export function ChatComponent({ chat }: { chat: any }) {
     const [isPressed, setIsPressed] = useState(false)
 
@@ -10,7 +11,7 @@ export function ChatComponent({ chat }: { chat: any }) {
         await navigator.clipboard.writeText(chat.content);
     };
     return <>
-        <div className="mb-3 hover:bg-slate-100 py-3 px-1 rounded hover:cursor-pointer">
+        <div className="mb-3 hover:bg-slate-100 dark:hover:bg-slate-900 py-3 px-2 rounded hover:cursor-pointer">
             <div className={`mb-1 flex items-center gap-2 ${chat.role == 'assistant' ? 'text-blue-500' : null}`}>
                 {
                     chat.role == 'assistant' ? (<>
@@ -46,7 +47,10 @@ export function ChatComponent({ chat }: { chat: any }) {
                     </Button>
                 </div>
             </div>
-            <div className="ml-[32px] lg:text-base text-xs prose dark:prose-invert prose-sm prose-p:mt-0 prose-p:mb-3 prose-p:text-xs lg:prose-p:text-sm">
+            <div className="ml-[32px] lg:text-base text-xs prose w-full dark:prose-invert prose-sm prose-p:mt-0 prose-p:mb-3 prose-p:text-xs lg:prose-p:text-sm">
+                {/* <Latex>
+                    {chat.content}
+                </Latex> */}
                 <Markdown>
                     {chat.content}
                 </Markdown>
