@@ -3,7 +3,16 @@ import { useState } from "react";
 import Markdown from "./Markdown";
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
-export function ChatComponent({ chat }: { chat: any }) {
+// import MarkdownIt from 'markdown-it';
+// import markdownItKatex from 'markdown-it-katex';
+
+
+// const md = new MarkdownIt();
+// md.use(markdownItKatex);
+
+export function ChatComponent({ chat, isMathAnswer = false }: { chat: any, isMathAnswer?: boolean }) {
+    // const result = md.render(chat.content);
+
     const [isPressed, setIsPressed] = useState(false)
 
     const copyToClipboard = async () => {
@@ -48,12 +57,19 @@ export function ChatComponent({ chat }: { chat: any }) {
                 </div>
             </div>
             <div className="ml-[32px] lg:text-base text-xs prose w-full dark:prose-invert prose-sm prose-p:mt-0 prose-p:mb-3 prose-p:text-xs lg:prose-p:text-sm">
-                {/* <Latex>
-                    {chat.content}
-                </Latex> */}
-                <Markdown>
-                    {chat.content}
-                </Markdown>
+                {
+                    isMathAnswer ? (<>
+                        {/* <div dangerouslySetInnerHTML={{ __html: result }}></div> */}
+                        <Latex>
+                            {chat.content}
+                        </Latex>
+                    </>) : (<>
+                        <Markdown>
+                            {chat.content}
+                        </Markdown>
+
+                    </>)
+                }
             </div>
         </div>
     </>

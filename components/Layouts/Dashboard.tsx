@@ -31,7 +31,7 @@ export default function Layout({ children, title }: { children: ReactNode, title
             </NavbarMenu>
         </Navbar>
         <div className="lg:flex gap-5 lg:w-[70%] w-[100%] lg:mx-auto lg:mt-20 px-5">
-            <div className="lg:basis-[20%] lg:block hidden">
+            <div className="lg:basis-[20%] lg:block hidden relative">
                 <SidebarMenu />
             </div>
             <div className="lg:basis-[80%] basis-[100%] flex flex-col">
