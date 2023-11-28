@@ -56,7 +56,7 @@ export function ChatComponent({ chat, isMathAnswer = false }: { chat: any, isMat
                     </Button>
                 </div>
             </div>
-            <div className="ml-[32px] lg:text-base text-xs prose w-full dark:prose-invert prose-sm prose-p:mt-0 prose-p:mb-3 prose-p:text-xs lg:prose-p:text-sm">
+            <div className="ml-[32px] prose dark:prose-invert prose-sm prose-p:mt-0 prose-p:mb-3 prose-p:text-xs lg:prose-p:text-sm max-w-none">
                 {
                     isMathAnswer ? (<>
                         {/* <div dangerouslySetInnerHTML={{ __html: result }}></div> */}
